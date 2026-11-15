@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link } from '@tanstack/react-router'
 import { FaBars, FaTimes } from 'react-icons/fa'
-import { useAuthStore } from '../store/authStore'
 
 const navLinks = [
   { to: '/', label: 'Home' },
@@ -12,7 +11,6 @@ const navLinks = [
 
 export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
-  const isAuthenticated = useAuthStore((state) => state.isAuthenticated)
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -34,8 +32,13 @@ export default function Header() {
     <header className="site-header">
       <nav className="nav-shell" aria-label="Main navigation">
         <Link to="/" className="brand-link" aria-label="Portfolio home" onClick={() => setMenuOpen(false)}>
-          <span className="brand-mark">P<span>.</span></span>
-          <span className="brand-caption">Portfolio<br />& development</span>
+          <img
+            className="brand-mark"
+            src="/images/yossif-hafney-mark.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span className="brand-caption">Yossif Hafney<br />Frontend Engineer</span>
         </Link>
 
         <div className="desktop-nav">
@@ -51,11 +54,6 @@ export default function Header() {
               {label}
             </Link>
           ))}
-          {isAuthenticated && (
-            <Link to="/admin" activeProps={{ className: 'nav-link is-active' }} className="nav-link">
-              Dashboard
-            </Link>
-          )}
         </div>
 
         <div className="nav-actions">
@@ -91,11 +89,6 @@ export default function Header() {
             {label}<span aria-hidden="true">↗</span>
           </Link>
         ))}
-        {isAuthenticated && (
-          <Link to="/admin" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>
-            Dashboard<span aria-hidden="true">↗</span>
-          </Link>
-        )}
         <Link to="/hire" className="mobile-nav-link mobile-nav-cta" onClick={() => setMenuOpen(false)}>
           Discuss a project<span aria-hidden="true">↗</span>
         </Link>
