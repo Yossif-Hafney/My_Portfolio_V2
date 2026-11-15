@@ -1,10 +1,12 @@
 import { FaArrowUp, FaGithub, FaLinkedin, FaRegEnvelope } from 'react-icons/fa'
 import { Link } from '@tanstack/react-router'
+import { profile } from '../data/portfolio'
+import { scrollToTop } from '../utils/scrollToTop'
 
 const socialLinks = [
-  { icon: FaGithub, href: 'https://github.com/yourusername', label: 'GitHub' },
-  { icon: FaLinkedin, href: 'https://linkedin.com/in/yourusername', label: 'LinkedIn' },
-  { icon: FaRegEnvelope, href: 'mailto:your.email@example.com', label: 'Email' },
+  { icon: FaGithub, href: profile.github, label: 'GitHub' },
+  { icon: FaLinkedin, href: profile.linkedin, label: 'LinkedIn' },
+  { icon: FaRegEnvelope, href: `mailto:${profile.email}`, label: 'Email' },
 ]
 
 export default function Footer() {
@@ -12,8 +14,13 @@ export default function Footer() {
     <footer className="site-footer">
       <div className="footer-main">
         <Link to="/" className="footer-brand">
-          <span className="brand-mark">P<span>.</span></span>
-          <span>Thoughtful work.<br />Made with care.</span>
+          <img
+            className="brand-mark"
+            src="/images/yossif-hafney-mark.svg"
+            alt=""
+            aria-hidden="true"
+          />
+          <span>{profile.name}<br />{profile.title}</span>
         </Link>
         <div className="footer-note">
           <p>Have a good idea?</p>
@@ -28,13 +35,13 @@ export default function Footer() {
         </div>
       </div>
       <div className="footer-bottom">
-        <span>© {new Date().getFullYear()} — Portfolio</span>
+        <span>© {new Date().getFullYear()} — {profile.name}</span>
         <div className="footer-links">
           <Link to="/projects">Work</Link>
           <Link to="/about">About</Link>
           <Link to="/hire">Hire me</Link>
         </div>
-        <a href="#top" onClick={(event) => { event.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>
+        <a href="#top" onClick={(event) => { event.preventDefault(); scrollToTop() }}>
           Back to top ↑
         </a>
       </div>
