@@ -3,6 +3,7 @@ import { Link, useParams } from '@tanstack/react-router'
 import { FaArrowDown, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { ProjectImageSlider } from '../Components/ProjectImageSlider'
 import { NotFound } from './NotFound'
 import { projects } from '../data/portfolio'
 
@@ -31,7 +32,6 @@ function ProjectDetailContent({
         .from('[data-detail-intro]', { autoAlpha: 0, y: 24, duration: 0.65 }, '-=0.42')
         .from('[data-detail-fact]', { autoAlpha: 0, y: 18, stagger: 0.1, duration: 0.55 }, '-=0.35')
         .from('[data-detail-image]', { autoAlpha: 0, y: 28, duration: 0.8 }, '-=0.65')
-        .from('[data-detail-image] img', { scale: 1.06, duration: 1.1, ease: 'power3.out' }, '<')
 
       root.querySelectorAll<HTMLElement>('[data-detail-reveal]').forEach((element) => {
         gsap.fromTo(
@@ -108,18 +108,11 @@ function ProjectDetailContent({
           </div>
 
           <figure className="project-detail-visual" data-detail-image>
-            <div className="project-detail-image-frame">
-              <img
-                src={project.image}
-                alt={`${project.title} interface screenshot`}
-                fetchPriority="high"
-                decoding="async"
-              />
-            </div>
-            <figcaption>
-              <span>Project interface</span>
-              <span>{project.title}</span>
-            </figcaption>
+            <ProjectImageSlider
+              key={project.slug}
+              images={project.gallery}
+              projectTitle={project.title}
+            />
           </figure>
         </div>
 
