@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
+import { FaArrowRight, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub } from "react-icons/fa";
 import { Link } from '@tanstack/react-router';
+import { profile } from '../data/portfolio'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
 export default function Contact() {
@@ -12,8 +13,7 @@ export default function Contact() {
     subject: "",
     message: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success">("idle");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
@@ -22,47 +22,39 @@ export default function Contact() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-    
-    // Simulate form submission
-    try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setSubmitStatus("success");
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    } catch {
-      setSubmitStatus("error");
-    } finally {
-      setIsSubmitting(false);
-    }
+    const body = encodeURIComponent(
+      `From: ${formData.name} (${formData.email})\n\n${formData.message}`,
+    );
+    window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(formData.subject)}&body=${body}`;
+    setSubmitStatus("success");
   };
 
   const contactInfo = [
     {
       icon: FaEnvelope,
       label: "Email",
-      value: "your.email@example.com",
-      href: "mailto:your.email@example.com",
+      value: profile.email,
+      href: `mailto:${profile.email}`,
     },
     {
       icon: FaPhone,
       label: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
+      value: profile.phone,
+      href: `tel:${profile.phoneLink}`,
     },
     {
       icon: FaMapMarkerAlt,
       label: "Location",
-      value: "San Francisco, CA",
-      href: "#",
+      value: profile.location,
+      href: "https://www.google.com/maps/search/?api=1&query=El+Mahalla+El+Kubra%2C+Cairo%2C+Egypt",
     },
   ];
 
   const socialLinks = [
-    { icon: FaLinkedin, href: "https://linkedin.com/in/yourusername", label: "LinkedIn" },
-    { icon: FaGithub, href: "https://github.com/yourusername", label: "GitHub" },
-    { icon: FaTwitter, href: "https://twitter.com/yourusername", label: "Twitter" },
+    { icon: FaLinkedin, href: profile.linkedin, label: "LinkedIn" },
+    { icon: FaGithub, href: profile.github, label: "GitHub" },
   ];
 
   return (
@@ -87,13 +79,7 @@ export default function Contact() {
             
             {submitStatus === "success" && (
               <div className="bg-green-100 dark:bg-green-900 border border-green-400 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg">
-                Thank you! Your message has been sent successfully. I'll get back to you soon.
-              </div>
-            )}
-
-            {submitStatus === "error" && (
-              <div className="bg-red-100 dark:bg-red-900 border border-red-400 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
-                Sorry, there was an error sending your message. Please try again.
+                Your email application should open with a message draft addressed to {profile.email}.
               </div>
             )}
 
@@ -126,7 +112,7 @@ export default function Contact() {
                     onChange={handleChange}
                     required
                     className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400"
-                    placeholder="your.email@example.com"
+                    placeholder="you@example.com"
                   />
                 </div>
               </div>
@@ -165,10 +151,9 @@ export default function Contact() {
 
               <button
                 type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl"
               >
-                {isSubmitting ? "Sending..." : "Send Message"}
+                Open Email Draft
               </button>
             </form>
           </div>
@@ -179,24 +164,21 @@ export default function Contact() {
               Contact Information
             </h3>
 
-            <div className="space-y-6">
+            <div className="contact-info-list">
               {contactInfo.map(({ icon: Icon, label, value, href }) => (
                 <a
                   key={label}
                   href={href}
-                  className="flex items-center gap-4 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200"
+                  className="contact-info-card"
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
-                      {label}
-                    </p>
-                    <p className="text-neutral-900 dark:text-white font-medium">
-                      {value}
-                    </p>
-                  </div>
+                  <span className="contact-info-icon">
+                    <Icon aria-hidden="true" />
+                  </span>
+                  <span className="contact-info-copy">
+                    <span className="contact-info-label">{label}</span>
+                    <span className="contact-info-value">{value}</span>
+                  </span>
+                  <FaArrowRight className="contact-info-arrow" aria-hidden="true" />
                 </a>
               ))}
             </div>
