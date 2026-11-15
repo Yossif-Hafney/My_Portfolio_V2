@@ -2,12 +2,14 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { Link } from '@tanstack/react-router'
 import { FaArrowDown, FaArrowRight, FaGithub, FaLinkedin, FaRegEnvelope } from 'react-icons/fa'
-import profileImage from '../images/profile.jpeg'
+import { profile } from '../data/portfolio'
+
+const profileImage = '/images/yossif-hero.webp'
 
 const socialLinks = [
-  { icon: FaGithub, href: 'https://github.com/yourusername', label: 'GitHub' },
-  { icon: FaLinkedin, href: 'https://linkedin.com/in/yourusername', label: 'LinkedIn' },
-  { icon: FaRegEnvelope, href: 'mailto:your.email@example.com', label: 'Email' },
+  { icon: FaGithub, href: profile.github, label: 'GitHub' },
+  { icon: FaLinkedin, href: profile.linkedin, label: 'LinkedIn' },
+  { icon: FaRegEnvelope, href: `mailto:${profile.email}`, label: 'Email' },
 ]
 
 export default function Landing() {
@@ -45,16 +47,15 @@ export default function Landing() {
       <div className="hero-grid">
         <div className="hero-copy">
           <p className="eyebrow" data-hero-copy>
-            <span className="status-dot" /> Available for select projects
+            <span className="status-dot" /> {profile.title}
           </p>
           <h1 id="hero-title" data-split="hero">
-            Thoughtful digital
+            Yossif{' '}
             <br />
-            <span>experiences.</span>
+            <span>Hafney</span>
           </h1>
           <p className="hero-description" data-hero-copy>
-            I’m a full-stack developer turning complex ideas into clear, useful, and
-            beautifully crafted products for the web.
+            {profile.summary}
           </p>
           <div className="hero-actions" data-hero-copy>
             <Link to="/projects" className="button-primary">
@@ -71,7 +72,7 @@ export default function Landing() {
               </a>
             ))}
             <span className="social-divider" />
-            <span className="hero-location">Full-stack development</span>
+            <span className="hero-location">{profile.location}</span>
           </div>
         </div>
 
@@ -80,10 +81,10 @@ export default function Landing() {
             <div className="hero-orbit" data-orbit aria-hidden="true">
               <span />
             </div>
-            <img src={profileImage} alt="Portrait of the portfolio owner" className="hero-photo" />
+            <img src={profileImage} alt="Yossif Hafney" className="hero-photo" />
             <div className="photo-caption">
               <span className="caption-mark">✳</span>
-              <span>Design-minded<br />development</span>
+              <span>Frontend<br />engineering</span>
             </div>
           </div>
           <div className="hero-index" aria-hidden="true">01 / 04</div>
