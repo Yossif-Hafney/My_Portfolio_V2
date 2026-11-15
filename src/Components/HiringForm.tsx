@@ -131,6 +131,7 @@ export const HiringForm = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="">Select budget range</option>
+              <option value="$200 - $1,000">$200 - $1,000</option>
               <option value="$1,000 - $5,000">$1,000 - $5,000</option>
               <option value="$5,000 - $10,000">$5,000 - $10,000</option>
               <option value="$10,000 - $25,000">$10,000 - $25,000</option>
