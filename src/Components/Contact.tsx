@@ -1,0 +1,262 @@
+import { useRef, useState } from "react";
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
+import { Link } from '@tanstack/react-router';
+import { useScrollReveal } from '../hooks/useScrollReveal'
+
+export default function Contact() {
+  const sectionRef = useRef<HTMLElement | null>(null)
+  useScrollReveal(sectionRef)
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    
+    // Simulate form submission
+    try {
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      setSubmitStatus("success");
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch {
+      setSubmitStatus("error");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const contactInfo = [
+    {
+      icon: FaEnvelope,
+      label: "Email",
+      value: "your.email@example.com",
+      href: "mailto:your.email@example.com",
+    },
+    {
+      icon: FaPhone,
+      label: "Phone",
+      value: "+1 (555) 123-4567",
+      href: "tel:+15551234567",
+    },
+    {
+      icon: FaMapMarkerAlt,
+      label: "Location",
+      value: "San Francisco, CA",
+      href: "#",
+    },
+  ];
+
+  const socialLinks = [
+    { icon: FaLinkedin, href: "https://linkedin.com/in/yourusername", label: "LinkedIn" },
+    { icon: FaGithub, href: "https://github.com/yourusername", label: "GitHub" },
+    { icon: FaTwitter, href: "https://twitter.com/yourusername", label: "Twitter" },
+  ];
+
+  return (
+    <section ref={sectionRef} className="portfolio-section contact-section">
+      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="section-heading" data-reveal>
+          <h2 className="text-4xl font-bold text-neutral-900 dark:text-white mb-4" data-split>
+            Get In Touch
+          </h2>
+          <p className="text-xl text-neutral-600 dark:text-neutral-400 max-w-3xl mx-auto">
+            I'm always interested in hearing about new opportunities and exciting projects. 
+            Let's discuss how we can work together!
+          </p>
+        </div>
+
+        <div className="grid lg:grid-cols-2 gap-16">
+          {/* Contact Form */}
+          <div className="contact-column" data-reveal>
+            <h3 className="text-2xl font-semibold text-neutral-900 dark:text-white">
+              Send a Message
+            </h3>
+            
+            {submitStatus === "success" && (
+              <div className="bg-green-100 dark:bg-green-900 border border-green-400 text-green-700 dark:text-green-300 px-4 py-3 rounded-lg">
+                Thank you! Your message has been sent successfully. I'll get back to you soon.
+              </div>
+            )}
+
+            {submitStatus === "error" && (
+              <div className="bg-red-100 dark:bg-red-900 border border-red-400 text-red-700 dark:text-red-300 px-4 py-3 rounded-lg">
+                Sorry, there was an error sending your message. Please try again.
+              </div>
+            )}
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid sm:grid-cols-2 gap-6">
+                <div>
+                  <label htmlFor="name" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                    Name *
+                  </label>
+                  <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400"
+                    placeholder="Your name"
+                  />
+                </div>
+                <div>
+                  <label htmlFor="email" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                    Email *
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400"
+                    placeholder="your.email@example.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label htmlFor="subject" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Subject *
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400"
+                  placeholder="What's this about?"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="message" className="block text-sm font-medium text-neutral-700 dark:text-neutral-300 mb-2">
+                  Message *
+                </label>
+                <textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                  rows={6}
+                  className="w-full px-4 py-3 border border-neutral-300 dark:border-neutral-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-neutral-800 text-neutral-900 dark:text-white placeholder-neutral-500 dark:placeholder-neutral-400 resize-none"
+                  placeholder="Tell me about your project..."
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={isSubmitting}
+                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white px-8 py-3 rounded-lg font-semibold transition-colors duration-200 shadow-lg hover:shadow-xl disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Sending..." : "Send Message"}
+              </button>
+            </form>
+          </div>
+
+          {/* Contact Information */}
+          <div className="contact-column contact-details" data-reveal>
+            <h3 className="text-2xl font-semibold text-neutral-900 dark:text-white">
+              Contact Information
+            </h3>
+
+            <div className="space-y-6">
+              {contactInfo.map(({ icon: Icon, label, value, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  className="flex items-center gap-4 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-700 transition-colors duration-200"
+                >
+                  <div className="flex-shrink-0 w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center">
+                    <Icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium text-neutral-500 dark:text-neutral-400">
+                      {label}
+                    </p>
+                    <p className="text-neutral-900 dark:text-white font-medium">
+                      {value}
+                    </p>
+                  </div>
+                </a>
+              ))}
+            </div>
+
+            {/* Social Links */}
+            <div className="pt-8 border-t border-neutral-200 dark:border-neutral-700">
+              <h4 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+                Follow Me
+              </h4>
+              <div className="flex gap-4">
+                {socialLinks.map(({ icon: Icon, href, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200"
+                    aria-label={label}
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Availability */}
+            <div className="pt-8 border-t border-neutral-200 dark:border-neutral-700">
+              <h4 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+                Availability
+              </h4>
+              <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                  <div>
+                    <p className="font-medium text-green-800 dark:text-green-300">
+                      Available for new opportunities
+                    </p>
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      Currently accepting freelance projects and full-time positions
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Back to Projects */}
+            <div className="pt-8 border-t border-neutral-200 dark:border-neutral-700">
+              <h4 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
+                Want to see my work?
+              </h4>
+              <Link
+                to="/projects"
+                className="inline-flex items-center gap-2 bg-neutral-100 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-300 hover:bg-neutral-200 dark:hover:bg-neutral-700 px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+              >
+                View My Projects
+              </Link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+} 
