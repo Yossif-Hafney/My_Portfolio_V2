@@ -5,10 +5,13 @@ import { About } from './Pages/About'
 import { Projects } from './Pages/Projects'
 import { Contact } from './Pages/Contact'
 import { Hire } from './Pages/Hire'
+import { NotFound } from './Pages/NotFound'
+import { ProjectDetail } from './Pages/ProjectDetail'
 
 // Create the root route
 const rootRoute = createRootRoute({
   component: Root,
+  notFoundComponent: NotFound,
 })
 
 // Create individual routes
@@ -30,6 +33,12 @@ const projectsRoute = createRoute({
   component: Projects,
 })
 
+const projectDetailRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/project/$slug',
+  component: ProjectDetail,
+})
+
 const contactRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/contact',
@@ -47,6 +56,7 @@ const routeTree = rootRoute.addChildren([
   indexRoute,
   aboutRoute,
   projectsRoute,
+  projectDetailRoute,
   contactRoute,
   hireRoute,
 ])
