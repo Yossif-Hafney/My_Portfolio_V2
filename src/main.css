@@ -411,6 +411,12 @@ img {
   margin-top: 52px;
 }
 
+.hero-social-list {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
 .hero-socials a,
 .footer-socials a {
   display: grid;
@@ -1594,6 +1600,37 @@ img {
   border-color: var(--accent);
   background: var(--accent);
   color: var(--ink);
+}
+
+.contact-socials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.contact-social-link {
+  display: inline-grid;
+  width: 46px;
+  height: 46px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--muted);
+  transition: color 180ms ease, background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.contact-social-link:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, var(--surface));
+  color: var(--accent);
+}
+
+.social-links-error {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11px;
 }
 
 .footer-bottom {
