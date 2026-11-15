@@ -1,12 +1,15 @@
 import { useRef } from 'react'
 import { FaArrowRight } from 'react-icons/fa'
 import { Link } from '@tanstack/react-router'
-import { projects } from '../data/portfolio'
+import { ProjectDataNotice } from './ProjectDataNotice'
 import { useScrollReveal } from '../hooks/useScrollReveal'
+import { formatProjectPeriod, useProjects } from '../hooks/useProjects'
 
 export default function Projects() {
   const sectionRef = useRef<HTMLElement | null>(null)
-  useScrollReveal(sectionRef)
+  const projectState = useProjects()
+  const projects = projectState.status === 'loaded' ? projectState.projects : []
+  useScrollReveal(sectionRef, projectState.status)
 
   return (
     <section ref={sectionRef} className="portfolio-section projects-section">
@@ -21,6 +24,9 @@ export default function Projects() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
+          {projectState.status !== 'loaded' && (
+            <ProjectDataNotice status={projectState.status} />
+          )}
           {projects.map((project) => (
             <article
               key={project.title}
@@ -42,15 +48,15 @@ export default function Projects() {
                 </div>
                 <div className="project-card-content p-6">
                   <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
-                    {project.role} · {project.period}
+                    {project.category} · {formatProjectPeriod(project.startDate, project.endDate)}
                   </p>
                   <h2 className="text-xl font-semibold text-neutral-900 dark:text-white mt-3 mb-3">
                     {project.title}
                   </h2>
-                  <p className="text-neutral-600 dark:text-neutral-400 mb-4">{project.description}</p>
+                  <p className="text-neutral-600 dark:text-neutral-400 mb-4">{project.shortDescription}</p>
                   <ul className="project-highlights">
-                    {project.highlights.map((highlight) => (
-                      <li key={highlight}>{highlight}</li>
+                    {project.features.slice(0, 3).map((feature) => (
+                      <li key={feature}>{feature}</li>
                     ))}
                   </ul>
                   <div className="flex flex-wrap gap-2 mt-5" aria-label="Technologies">

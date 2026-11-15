@@ -4,19 +4,20 @@ import { FaArrowDown, FaArrowLeft, FaArrowRight } from 'react-icons/fa'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ProjectImageSlider } from '../Components/ProjectImageSlider'
+import { ProjectDataNotice } from '../Components/ProjectDataNotice'
+import { formatProjectPeriod, useProjects, type Project } from '../hooks/useProjects'
 import { NotFound } from './NotFound'
-import { projects } from '../data/portfolio'
 
 gsap.registerPlugin(ScrollTrigger)
-
-type Project = (typeof projects)[number]
 
 function ProjectDetailContent({
   project,
   projectIndex,
+  projects,
 }: {
   project: Project
   projectIndex: number
+  projects: Project[]
 }) {
   const pageRef = useRef<HTMLElement | null>(null)
   const nextProject = projects[(projectIndex + 1) % projects.length] ?? project
@@ -77,16 +78,24 @@ function ProjectDetailContent({
               Project case study
             </p>
             <h1 id="project-detail-title" data-detail-title>{project.title}</h1>
-            <p className="project-detail-intro" data-detail-intro>{project.description}</p>
+            <p className="project-detail-intro" data-detail-intro>{project.fullDescription}</p>
 
             <div className="project-detail-facts">
               <div data-detail-fact>
-                <span>My role</span>
-                <strong>{project.role}</strong>
+                <span>Category</span>
+                <strong>{project.category}</strong>
+              </div>
+              <div data-detail-fact>
+                <span>Client</span>
+                <strong>{project.client}</strong>
               </div>
               <div data-detail-fact>
                 <span>Timeline</span>
-                <strong>{project.period}</strong>
+                <strong>{formatProjectPeriod(project.startDate, project.endDate)}</strong>
+              </div>
+              <div data-detail-fact>
+                <span>Status</span>
+                <strong>{project.status}</strong>
               </div>
             </div>
 
@@ -94,14 +103,26 @@ function ProjectDetailContent({
               <a href="#project-contributions" className="project-detail-explore">
                 Explore the work <FaArrowDown aria-hidden="true" />
               </a>
-              {project.url && (
+              {project.liveDemo && (
                 <a
-                  href={project.url}
+                  href={project.liveDemo}
                   className="project-detail-live-link"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Visit live website <FaArrowRight aria-hidden="true" />
+                  {project.liveCta ?? 'Visit live website'} <FaArrowRight aria-hidden="true" />
+                </a>
+              )}
+              {project.sourceCode === 'Private Repository' ? (
+                <span className="project-detail-private-source">Private repository</span>
+              ) : (
+                <a
+                  href={project.sourceCode}
+                  className="project-detail-source-link"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View source code <FaArrowRight aria-hidden="true" />
                 </a>
               )}
             </div>
@@ -123,19 +144,22 @@ function ProjectDetailContent({
           data-detail-reveal
         >
           <div className="project-detail-section-heading">
-            <p className="project-detail-eyebrow"><span>01</span> Selected contributions</p>
-            <h2 id="project-contributions-title">What I worked on</h2>
-            <p>Key responsibilities and contributions from my work on this project.</p>
+            <p className="project-detail-eyebrow"><span>01</span> Project features</p>
+            <h2 id="project-contributions-title">What the product includes</h2>
+            <p>Core areas and capabilities described for this project.</p>
           </div>
           <ol className="project-contribution-list">
-            {project.highlights.map((highlight, index) => (
-              <li key={highlight}>
+            {project.features.map((feature, index) => (
+              <li key={feature}>
                 <span>{String(index + 1).padStart(2, '0')}</span>
-                <p>{highlight}</p>
+                <p>{feature}</p>
                 <FaArrowRight aria-hidden="true" />
               </li>
             ))}
           </ol>
+          <div className="project-detail-branches" aria-label="Project areas">
+            {project.branches.map((branch) => <span key={branch}>{branch}</span>)}
+          </div>
         </section>
 
         <section className="project-detail-stack" aria-labelledby="project-stack-title" data-detail-reveal>
@@ -158,7 +182,7 @@ function ProjectDetailContent({
           <div>
             <p className="project-detail-eyebrow">Continue exploring</p>
             <h2>{nextProject.title}</h2>
-            <p>{nextProject.description}</p>
+            <p>{nextProject.shortDescription}</p>
           </div>
           <Link to="/project/$slug" params={{ slug: nextProject.slug }}>
             <span>View project</span>
@@ -177,10 +201,29 @@ function ProjectDetailContent({
 
 export function ProjectDetail() {
   const { slug } = useParams({ from: '/project/$slug' })
+  const projectState = useProjects()
+
+  if (projectState.status !== 'loaded') {
+    return (
+      <section className="project-detail-page">
+        <div className="project-detail-shell">
+          <ProjectDataNotice status={projectState.status} />
+        </div>
+      </section>
+    )
+  }
+
+  const projects = projectState.projects
   const projectIndex = projects.findIndex((project) => project.slug === slug)
   const project = projects[projectIndex]
 
   if (!project) return <NotFound />
 
-  return <ProjectDetailContent project={project} projectIndex={projectIndex} />
+  return (
+    <ProjectDetailContent
+      project={project}
+      projectIndex={projectIndex}
+      projects={projects}
+    />
+  )
 }
