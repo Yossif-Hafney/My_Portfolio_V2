@@ -5,8 +5,6 @@ export const profile = {
   phone: '+2001501883168',
   phoneLink: '+2001501883168',
   location: 'El Mahalla El Kubra / Cairo, Egypt',
-  github: 'https://github.com/Yossif-Hafney',
-  linkedin: 'https://linkedin.com/in/yossifhafney',
   summary:
     'Detail-oriented Frontend Developer and Computer & Systems Engineering student with hands-on experience building scalable, responsive web applications using Vue.js, Nuxt.js, and Tailwind CSS. Proven ability to integrate complex frontend components into production systems and legacy architectures (PHP/Laravel). Strong foundation in computer science core principles, actively expanding full-stack capabilities with React, Next.js, and backend frameworks.',
 }
