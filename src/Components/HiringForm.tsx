@@ -1,8 +1,7 @@
 import { useState } from 'react'
-import { useOrdersStore } from '../store/ordersStore'
+import { profile } from '../data/portfolio'
 
 export const HiringForm = () => {
-  const addOrder = useOrdersStore((state) => state.addOrder)
   const [formData, setFormData] = useState({
     clientName: '',
     clientEmail: '',
@@ -11,31 +10,23 @@ export const HiringForm = () => {
     budget: '',
     timeline: ''
   })
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitSuccess, setSubmitSuccess] = useState(false)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setIsSubmitting(true)
-    
-    try {
-      addOrder(formData)
-      setSubmitSuccess(true)
-      setFormData({
-        clientName: '',
-        clientEmail: '',
-        projectType: 'web-development',
-        projectDescription: '',
-        budget: '',
-        timeline: ''
-      })
-      
-      setTimeout(() => setSubmitSuccess(false), 5000)
-    } catch (error) {
-      console.error('Error submitting order:', error)
-    } finally {
-      setIsSubmitting(false)
-    }
+    const body = encodeURIComponent(
+      [
+        `Name: ${formData.clientName}`,
+        `Email: ${formData.clientEmail}`,
+        `Project type: ${formData.projectType}`,
+        `Budget: ${formData.budget}`,
+        `Timeline: ${formData.timeline}`,
+        '',
+        formData.projectDescription,
+      ].join('\n'),
+    )
+    window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent('Project inquiry')}&body=${body}`
+    setSubmitSuccess(true)
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -51,7 +42,7 @@ export const HiringForm = () => {
       
       {submitSuccess && (
         <div className="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
-          Thank you! Your hiring request has been submitted successfully. I'll get back to you soon!
+          Your email application should open with your project inquiry addressed to {profile.email}.
         </div>
       )}
 
@@ -85,7 +76,7 @@ export const HiringForm = () => {
               onChange={handleChange}
               required
               className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="your.email@example.com"
+              placeholder="you@example.com"
             />
           </div>
         </div>
@@ -174,10 +165,9 @@ export const HiringForm = () => {
 
         <button
           type="submit"
-          disabled={isSubmitting}
           className="w-full bg-blue-600 text-white py-3 px-6 rounded-md font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
-          {isSubmitting ? 'Submitting...' : 'Submit Hiring Request'}
+          Open Email Draft
         </button>
       </form>
     </div>
