@@ -1,16 +1,11 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { Link } from '@tanstack/react-router'
-import { FaArrowDown, FaArrowRight, FaGithub, FaLinkedin, FaRegEnvelope } from 'react-icons/fa'
+import { FaArrowDown, FaArrowRight } from 'react-icons/fa'
+import { SocialLinkList } from './SocialLinks'
 import { profile } from '../data/portfolio'
 
 const profileImage = '/images/yossif-hero.webp'
-
-const socialLinks = [
-  { icon: FaGithub, href: profile.github, label: 'GitHub' },
-  { icon: FaLinkedin, href: profile.linkedin, label: 'LinkedIn' },
-  { icon: FaRegEnvelope, href: `mailto:${profile.email}`, label: 'Email' },
-]
 
 export default function Landing() {
   const heroRef = useRef<HTMLElement>(null)
@@ -66,11 +61,7 @@ export default function Landing() {
             </Link>
           </div>
           <div className="hero-socials" data-hero-copy aria-label="Social links">
-            {socialLinks.map(({ icon: Icon, href, label }) => (
-              <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
-                <Icon aria-hidden="true" />
-              </a>
-            ))}
+            <SocialLinkList className="hero-social-list" linkClassName="hero-social-link" />
             <span className="social-divider" />
             <span className="hero-location">{profile.location}</span>
           </div>
