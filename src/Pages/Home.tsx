@@ -12,9 +12,11 @@ import {
   SiVuedotjs,
 } from 'react-icons/si'
 import Landing from '../Components/Landing'
-import { education, projects, profile, skills } from '../data/portfolio'
+import { ProjectDataNotice } from '../Components/ProjectDataNotice'
+import { education, profile, skills } from '../data/portfolio'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 import { useStackedScroll } from '../hooks/useStackedScroll'
+import { formatProjectPeriod, useProjects } from '../hooks/useProjects'
 
 const skillCards = [
   { name: 'JavaScript (ES6+)', icon: SiJavascript, color: '#e8b931' },
@@ -31,8 +33,10 @@ export function Home() {
   const pageRef = useRef<HTMLDivElement | null>(null)
   const sequenceRef = useRef<HTMLDivElement | null>(null)
   const progressRef = useRef<HTMLElement | null>(null)
-  useScrollReveal(pageRef)
-  useStackedScroll(sequenceRef, progressRef)
+  const projectState = useProjects()
+  const projects = projectState.status === 'loaded' ? projectState.projects : []
+  useScrollReveal(pageRef, projectState.status)
+  useStackedScroll(sequenceRef, progressRef, projectState.status)
 
   return (
     <div ref={pageRef} className="home-page">
@@ -87,12 +91,17 @@ export function Home() {
                 <h2 data-split>Frontend work<br /><span>in production systems.</span></h2>
               </div>
               <div className="journey-list">
+                {projectState.status !== 'loaded' && (
+                  <ProjectDataNotice status={projectState.status} />
+                )}
                 {projects.map((project, index) => (
                   <article className="journey-card" key={project.title} data-reveal>
-                    <span className="journey-period">{project.period}</span>
+                    <span className="journey-period">
+                      {formatProjectPeriod(project.startDate, project.endDate)}
+                    </span>
                     <div>
                       <h3>{project.title}</h3>
-                      <p className="journey-organization">{project.role}</p>
+                      <p className="journey-organization">{project.category}</p>
                       <p>{project.description}</p>
                     </div>
                     <span className="journey-index">{String(index + 1).padStart(2, '0')}</span>
@@ -147,7 +156,7 @@ export function Home() {
                     />
                     <span className="featured-number">{String(index + 1).padStart(2, '0')}</span>
                     <span className="featured-arrow" aria-hidden="true"><FaArrowRight /></span>
-                    <p>{project.role} · {project.period}</p>
+                    <p>{project.category} · {formatProjectPeriod(project.startDate, project.endDate)}</p>
                     <h3>{project.title}</h3>
                     <span>{project.technologies.join(' · ')}</span>
                   </div>
