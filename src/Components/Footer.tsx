@@ -1,13 +1,8 @@
-import { FaArrowUp, FaGithub, FaLinkedin, FaRegEnvelope } from 'react-icons/fa'
+import { FaArrowUp } from 'react-icons/fa'
 import { Link } from '@tanstack/react-router'
+import { SocialLinkList } from './SocialLinks'
 import { profile } from '../data/portfolio'
 import { scrollToTop } from '../utils/scrollToTop'
-
-const socialLinks = [
-  { icon: FaGithub, href: profile.github, label: 'GitHub' },
-  { icon: FaLinkedin, href: profile.linkedin, label: 'LinkedIn' },
-  { icon: FaRegEnvelope, href: `mailto:${profile.email}`, label: 'Email' },
-]
 
 export default function Footer() {
   return (
@@ -26,13 +21,7 @@ export default function Footer() {
           <p>Have a good idea?</p>
           <Link to="/contact">I’d love to hear about it <FaArrowUp aria-hidden="true" /></Link>
         </div>
-        <div className="footer-socials" aria-label="Social links">
-          {socialLinks.map(({ icon: Icon, href, label }) => (
-            <a key={label} href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
-              <Icon aria-hidden="true" />
-            </a>
-          ))}
-        </div>
+        <SocialLinkList className="footer-socials" />
       </div>
       <div className="footer-bottom">
         <span>© {new Date().getFullYear()} — {profile.name}</span>
