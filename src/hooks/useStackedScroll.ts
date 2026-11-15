@@ -7,6 +7,7 @@ gsap.registerPlugin(ScrollTrigger)
 export function useStackedScroll(
   sequence: RefObject<HTMLElement | null>,
   progress: RefObject<HTMLElement | null>,
+  refreshKey?: string,
 ) {
   useEffect(() => {
     const root = sequence.current
@@ -75,5 +76,5 @@ export function useStackedScroll(
       window.clearTimeout(timeoutId)
       context.revert()
     }
-  }, [sequence, progress])
+  }, [sequence, progress, refreshKey])
 }
