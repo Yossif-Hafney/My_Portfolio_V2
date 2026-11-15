@@ -5,7 +5,6 @@ import { About } from './Pages/About'
 import { Projects } from './Pages/Projects'
 import { Contact } from './Pages/Contact'
 import { Hire } from './Pages/Hire'
-import { Admin } from './Pages/Admin'
 
 // Create the root route
 const rootRoute = createRootRoute({
@@ -43,12 +42,6 @@ const hireRoute = createRoute({
   component: Hire,
 })
 
-const adminRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/admin',
-  component: Admin,
-})
-
 // Create the route tree
 const routeTree = rootRoute.addChildren([
   indexRoute,
@@ -56,7 +49,6 @@ const routeTree = rootRoute.addChildren([
   projectsRoute,
   contactRoute,
   hireRoute,
-  adminRoute,
 ])
 
 // Create the router
