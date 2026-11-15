@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
-import { FaArrowRight, FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaGithub } from "react-icons/fa";
+import { FaArrowRight, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
 import { Link } from '@tanstack/react-router';
+import { SocialLinkList } from './SocialLinks'
 import { profile } from '../data/portfolio'
 import { useScrollReveal } from '../hooks/useScrollReveal'
 
@@ -50,11 +51,6 @@ export default function Contact() {
       value: profile.location,
       href: "https://www.google.com/maps/search/?api=1&query=El+Mahalla+El+Kubra%2C+Cairo%2C+Egypt",
     },
-  ];
-
-  const socialLinks = [
-    { icon: FaLinkedin, href: profile.linkedin, label: "LinkedIn" },
-    { icon: FaGithub, href: profile.github, label: "GitHub" },
   ];
 
   return (
@@ -188,24 +184,11 @@ export default function Contact() {
               <h4 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
                 Follow Me
               </h4>
-              <div className="flex gap-4">
-                {socialLinks.map(({ icon: Icon, href, label }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-neutral-100 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 hover:bg-blue-100 dark:hover:bg-blue-900 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200"
-                    aria-label={label}
-                  >
-                    <Icon className="w-5 h-5" />
-                  </a>
-                ))}
-              </div>
+              <SocialLinkList className="contact-socials" linkClassName="contact-social-link" />
             </div>
 
             {/* Availability */}
-            <div className="pt-8 border-t border-neutral-200 dark:border-neutral-700">
+            <div className="pt-8">
               <h4 className="text-lg font-semibold text-neutral-900 dark:text-white mb-4">
                 Availability
               </h4>
